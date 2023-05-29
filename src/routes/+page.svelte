@@ -14,13 +14,16 @@
   }
 
   function handleClick(cellIndex: number) {
-    if (board[cellIndex] === '' && !winner) {
-      board[cellIndex] = currentPlayer;
-      checkWinner();
+  if (board[cellIndex] === '' && !winner) {
+    board[cellIndex] = currentPlayer;
+    checkWinner();
+    if (!winner) {
       currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
       checkDraw();
     }
   }
+}
+
 
   function checkWinner() {
     const winningCombinations: number[][] = [
