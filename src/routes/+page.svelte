@@ -78,7 +78,6 @@
   }
 
   onMount(() => {
-    console.log('Tic Tac Toe game started!');
     startTimer();
   });
 
