@@ -1,29 +1,28 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  
+
 
   let board: string[] = ['', '', '', '', '', '', '', '', ''];
   let currentPlayer: string = generateRandomPlayer();
   let winner: string | null = null;
   let startTime: number = Date.now();
   let elapsedTime: number = 0;
-  let timerInterval: NodeJS.Timeout;
+  let timer: NodeJS.Timeout;;
 
   function generateRandomPlayer() {
     return Math.random() < 0.5 ? 'X' : 'O';
   }
 
   function handleClick(cellIndex: number) {
-  if (board[cellIndex] === '' && !winner) {
-    board[cellIndex] = currentPlayer;
-    checkWinner();
-    if (!winner) {
-      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-      checkDraw();
+    if (board[cellIndex] === '' && !winner) {
+      board[cellIndex] = currentPlayer;
+      checkWinner();
+      if (!winner) {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        checkDraw();
+      }
     }
   }
-}
-
 
   function checkWinner() {
     const winningCombinations: number[][] = [
@@ -55,13 +54,13 @@
   }
 
   function startTimer() {
-    timerInterval = setInterval(() => {
+    timer = setInterval(() => {
       elapsedTime = Math.floor((Date.now() - startTime) / 1000);
     }, 1000);
   }
 
   function stopTimer() {
-    clearInterval(timerInterval);
+    clearInterval(timer);
   }
 
   function formatTime(time: number): string {
@@ -87,8 +86,6 @@
   onDestroy(() => {
     stopTimer();
   });
-
-  
 </script>
 
 <svelte:head>
@@ -101,18 +98,18 @@
   <h3>Time: {formatTime(elapsedTime)}</h3>
   <div class="board">
     {#each board as cell, cellIndex}
-      <button id="cell-{cellIndex}" class="cell" on:click={() => handleClick(cellIndex)}>
-        {#if cell === 'X'}
-          <span class="x-symbol">{cell}</span>
-        {:else if cell === 'O'}
-          <span class="o-symbol">{cell}</span>
-        {/if}
-      </button>
+    <button id="cell-{cellIndex}" class="cell" on:click={() => handleClick(cellIndex)}>
+      {#if cell === 'X'}
+      <span class="x-symbol">{cell}</span>
+      {:else if cell === 'O'}
+      <span class="o-symbol">{cell}</span>
+      {/if}
+    </button>
     {/each}
   </div>
   {#if winner}
-    <p>{#if winner === 'Draw'}It's a Draw!{:else}Winner: {winner}{/if}</p>
-    <button class="play-again-button" on:click={resetGame}>Play Again</button>
+  <p>{#if winner === 'Draw'}It's a Draw!{:else}Winner: {winner}{/if}</p>
+  <button class="play-again-button" on:click={resetGame}>Play Again</button>
   {/if}
 </div>
 
@@ -188,7 +185,7 @@
     font-size: 20px;
     margin-top: 20px;
   }
-  
+
   @keyframes scale-up {
     0% {
       transform: scale(0);
